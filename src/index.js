@@ -8,18 +8,31 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-mongoose.connect("mongodb+srv://functionup-cohort:G0Loxqc9wFEGyEeJ@cluster0.rzotr.mongodb.net/Pritesh8769811-DB?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://Anshika:anshika2003@cluster0.ajpkc5u.mongodb.net/Anshika10-DB", {
     useNewUrlParser: true
 })
 .then( () => console.log("MongoDb is connected"))
 .catch ( err => console.log(err) )
 
-app.use (
-    function (req, res, next) {
-        console.log ("inside GLOBAL MW");
-        next();
-  }
-  );
+// app.use (
+//     function (req, res, next) {
+//         console.log ("inside GLOBAL MW");
+//         next();
+//   }
+//   );
+
+// app.use(
+//      function ( req, res, next) {
+//     let ipAddress= req.socket.remoteAddress
+//      let timeStamp= new Date()
+//      let route= req.path
+//      console.log(ipAddress)
+//      console.log(timeStamp)
+//      console.log(route)
+//     next();
+// }
+//);
+
 
 app.use('/', route);
 
