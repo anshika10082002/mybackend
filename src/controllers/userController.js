@@ -3,107 +3,89 @@ const UserModel = require("../models/userModel");
 
 //-------------------------------------------------------//
 const createUser= async function(req,res){
+  try{
   let data= req.body
-  let userCreated= await UserModel.create(data)
-  res.send({satus:true,data:userCreated})
+  // if(Object.keys(data).length!=0){
+    let userCreated= await UserModel.create(data)
+    res.status(201).send({status:true,data:userCreated})
+//   }else{
+//     res.status(401).send({data:userCreated})
+//  }
+  }
+  catch(error){
+       res.status(500).send({status:false,error:error.message})
+  }
 }
 
 //-------------------------------------------------------//
 const loginUser=async function(req,res){
+  try{
   let emailId= req.body.emailId
   let password= req.body.password
   let user=await UserModel.findOne({emailId:emailId,password:password})
   if(!user){
-    return res.send({status:false,msg:"user does not exists"})
+    return res.status(400).send({status:false,msg:"user does not exists"})
   }
   let token= jwt.sign({userId:user._id.toString(),user:"Anshika",cohort:"FunctionUp"},"Anshika-secret-key")
   res.setHeader("x-auth-token",token)
-  res.send({status:true,myToken:token})
+  res.status(200).send({status:true,myToken:token})
+}
+catch(error){
+   return res.status(500).send({status:false,error:error.message})
+}
 }
 //--------------------------------------------------------------------------//
 
 const getUserData= async function(req,res){ 
-  let token= req.headers["x-auth-token"]
-  if(!token){
-    res.send({status:false,msg:"token must be present"})
-  }
-
-  let checktoken= jwt.verify(token,"Anshika-secret-key")
-  if(!checktoken){
-    return res.send({status:false,msg:"the token is invalid"})
-  }
-
-  let currentUser= req.params.userId
-  let loggedInUser= checktoken.userId
-  if(currentUser!=loggedInUser)
-  {
-    return res.send({msg:"user is not allowed to for this request"})
-  }
-      
-  
+       
+  try{
+   
   let userData= await UserModel.findById(req.params.userId)
   if(!userData)
   {
-    return res.send({status:false,msg:"this userid is not valid"})
+    return res.status(400).send({status:false,msg:"this userid is not valid"})
   } 
-  return res.send({status:true,data:userData})
+  return res.status(200).send({status:true,data:userData})
 }
+catch(error){
+    return res.status(500).send({status:false,error:error.message})
+}
+}  
 
 //---------------------------------------------------------------------------//
 const updateUser= async function(req,res){
-  let token= req.headers["x-auth-token"]
-  if(!token){
-    res.send({status:false,msg:"token must be present"})
-  }
-  let checktoken= jwt.verify(token,"Anshika-secret-key")
-  if(!checktoken){
-    return res.send({status:false,msg:"the token is invalid"})
-  }
- 
-  let currentUser= req.params.userId
-  let loggedInUser= checktoken.userId
-  if(currentUser!=loggedInUser)
-  {
-    return res.send({msg:"user is not allowed to for this request"})
-  }
-   
+  
+   try{
   let userId=req.params.userId
   let userData= await UserModel.findById(req.params.userId)
   if(!userData){
-    return res.send({status:false,msg:"user not found"})
+    return res.status(400).send({status:false,msg:"user not found"})
   }
  
   let userDetails= req.body
   let updatedUser= await UserModel.findOneAndUpdate({_id:userId},userDetails)
-  return res.send({data:updatedUser})
+  return res.status(200).send({status:true,data:updatedUser})
 }
-
+catch(error){
+   res.status(500).send({status:false,error:error.message})
+}
+}
 //----------------------------------------------------------------------------//
 
 const deleteUser=async function(req,res){
-  let token= req.headers["x-auth-token"]
-  if(!token){
-    res.send({status:false,msg:"token must be present"})
-  }
-  let checktoken= jwt.verify(token,"Anshika-secret-key")
-  if(!checktoken){
-    return res.send({status:false,msg:"the token is invalid"})
-  }
   
-  let currentUser= req.params.userId
-  let loggedInUser= checktoken.userId
-  if(currentUser!=loggedInUser)
-  {
-    return res.send({msg:"user is not allowed to for this request"})
-  }
-
+try{
   let userData= await UserModel.findById(req.params.userId)
   if(!userData){
-    return res.send({status:false,msg:"user not found"})
+    return res.status(400).send({status:false,msg:"user not found"})
   }
 
   let deletedUser= await UserModel.findOneAndUpdate({_id:userData},{$set:{isDeleted:true}},{new:true})
-  return res.send({status:true, data:deletedUser})
+  return res.status(200).send({status:true, data:deletedUser})
+}
+catch(error){
+  return res.status(500).send({status:false,error:error.message})
+}
 }
 
 
@@ -116,35 +98,4 @@ module.exports.getUserData=getUserData
 module.exports.updateUser=updateUser
 module.exports.deleteUser=deleteUser
 
-
-// const postMessage = async function (req, res) {
-//     let message = req.body.message
-//     // Check if the token is present
-//     // Check if the token present is a valid token
-//     // Return a different error message in both these cases
-//     let token = req.headers["x-auth-token"]
-//     if(!token) return res.send({status: false, msg: "token must be present in the request header"})
-//     let decodedToken = jwt.verify(token, 'functionup-thorium')
-
-//     if(!decodedToken) return res.send({status: false, msg:"token is not valid"})
-    
-//     //userId for which the request is made. In this case message to be posted.
-//     let userToBeModified = req.params.userId
-//     //userId for the logged-in user
-//     let userLoggedIn = decodedToken.userId
- 
-//     //userId comparision to check if the logged-in user is requesting for their own data
-//     if(userToBeModified != userLoggedIn) return res.send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
-
-//     let user = await userModel.findById(req.params.userId)
-//     if(!user) return res.send({status: false, msg: 'No such user exists'})
-    
-//     let updatedPosts = user.posts
-//     //add the message to user's posts
-//     updatedPosts.push(message)
-//     let updatedUser = await userModel.findOneAndUpdate({_id: user._id},{posts: updatedPosts}, {new: true})
-
-//     //return the updated user document
-//     return res.send({status: true, data: updatedUser})
-// }
 
