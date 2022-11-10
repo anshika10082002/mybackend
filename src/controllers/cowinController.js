@@ -79,7 +79,25 @@ let getOtp = async function (req, res) {
 }
 
 
+let getDistrictsById=async function(req,res){
+    try{
+let id= req.query.district_id
+let date= req.query.date
+let options={
+    mathod:"get",
+    url:`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${id}&date=${date}`
+}
+let result= await axios(options)
+ res.status(200).send({status:true,msg:result.data})
+    }
+    catch(error){
+        res.status(500).send({ msg: error.message })
+    }
+}
+
+
 module.exports.getStates = getStates
 module.exports.getDistricts = getDistricts
 module.exports.getByPin = getByPin
 module.exports.getOtp = getOtp
+module.exports.getDistrictsById=getDistrictsById
