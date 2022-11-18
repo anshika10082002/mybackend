@@ -88,7 +88,7 @@ const loginAuthor = async function (req, res) {
         return res.status(400).send({status:false,message:"Your password must have characters, contain at least one number or symbol, and have a mixture of uppercase and lowercase letters."})
     }
   
-    let author = await authors.findOne( { emailId: emailId, password: password } );
+    let author = await authors.findOne( { email: emailId, password: password } );
     if (!author)
       return res.send( { status: false, msg: "username or the password is not corerct" } );
   
