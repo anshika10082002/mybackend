@@ -57,7 +57,7 @@ const createAuthor= async function(req,res){ // Checking body is empty or not
     }
 
     if(!isValidPassword(password)){ // Password validation
-        return res.status(400).send({status:false,message:"Your password must have characters, contain at least one number or symbol, and have a mixture of uppercase and lowercase letters."})
+        return res.status(400).send({status:false,message:"Your password must have 8 characters, contain at least one number or symbol, and have a mixture of uppercase and lowercase letters."})
     }
     
     /*-----------------------------------CREATING AUTHOR-----------------------------------------------------*/
@@ -78,7 +78,7 @@ const loginAuthor = async function (req, res) {
     try{
 
         let emailId = req.body.emailId;
-    let password = req.body.password;
+        let password = req.body.password;
 
     if(!isValidEmail(emailId)){ // Email validation
         return res.status(400).send({status:false,message:"Please provide valid Email"})
@@ -88,7 +88,7 @@ const loginAuthor = async function (req, res) {
         return res.status(400).send({status:false,message:"Your password must have characters, contain at least one number or symbol, and have a mixture of uppercase and lowercase letters."})
     }
   
-    let author = await authors.findOne( { emailId: emailId, password: password } );
+    let author = await authors.findOne( { email: emailId, password: password } );
     if (!author)
       return res.send( { status: false, msg: "username or the password is not corerct" } );
   

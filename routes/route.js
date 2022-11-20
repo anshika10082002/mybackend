@@ -24,5 +24,4 @@ router.delete("/blogs/:blogId",Middleware.authenticate,blogController.deleteBlog
 router.delete("/blogs",Middleware.authenticate,blogController.deleteDocument) // Delete blog by blogId OK
 
 
-
 module.exports = router;

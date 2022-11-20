@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 /*-----------------------------------NAME VALIDATION-----------------------------------------------------*/
 
 const isValidName = function (name){
-    const nameRegex = /^[a-zA-Z][a-zA-Z\\s]+$/;
+    const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
     return nameRegex.test(name);
 };
 

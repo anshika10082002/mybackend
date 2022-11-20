@@ -253,7 +253,7 @@ const deleteDocument=async function(req,res){
    
    let deleteDoc= await BlogModel.find({isDeleted:false},data).updateMany({$set:{isDeleted:true,deletedAt:moment().format()}})
 
-   if(!deleteDoc){
+   if(deleteDoc.length == 0){
       return res.status(404).send({msg:"Blog not found"})
    }
         res.status(200).send({msg:deleteDoc})
