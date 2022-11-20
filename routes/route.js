@@ -7,21 +7,30 @@ const blogController= require("../controllers/blogController")
 
 const Middleware = require("../Middleware/auth")
 
-router.post('/authors',authorController.createAuthor) // Creating Author Data ok
 
-router.post('/login',authorController.loginAuthor)  //User login and generate token ok
 
-router.post("/blogs",Middleware.authenticate,Middleware.auth2,blogController.createBlog)  // Creating blog ok
 
-router.get('/getblogs',blogController.getblogwithauthor) //Getting Blog data with Author details EXTRA
+router.post('/authors',authorController.createAuthor) // Creating Authors Data 
 
-router.get('/blogs',Middleware.authenticate,blogController.getblog) //Get Filtered Vlogs ok
+router.post('/login',authorController.loginAuthor)  //author login and generate token 
 
-router.put('/blogs/:blogId',Middleware.authenticate,blogController.updatedBlog) // Update Blog ok
+router.post("/blogs",Middleware.authenticate,Middleware.auth2,blogController.createBlog)  // Creating blog 
 
-router.delete("/blogs/:blogId",Middleware.authenticate,blogController.deleteBlog) // Delete blog by blogId ok
+router.get('/blogs',Middleware.authenticate,blogController.getblog) //Get Filtered Vlogs 
 
-router.delete("/blogs",Middleware.authenticate,blogController.deleteDocument) // Delete blog by blogId OK
+router.put('/blogs/:blogId',Middleware.authenticate,blogController.updatedBlog) // Update Blog 
+
+router.delete("/blogs/:blogId",Middleware.authenticate,blogController.deleteBlog) //Delete blog by path param-blogId 
+
+router.delete("/blogs",Middleware.authenticate,blogController.deleteDocument) // Delete blog by query params  
 
 
 module.exports = router;
+
+
+
+
+
+
+
+//router.get('/getblogs',blogController.getblogwithauthor) //Getting Blog data with Author details EXTRA

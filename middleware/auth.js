@@ -13,11 +13,11 @@ const authenticate= async function(req,res,next){
     return res.status(401).send({status:false,msg:"token is invalid"})
    }
    req.verifyToken=verifyToken
-   console.log("Authentication successfull")
+   //console.log("Authentication successfull")
 }
 catch(error){
     res.status(500).send({status:false,msg:error.message})
-    console.log("Authentication Failed")
+    //console.log("Authentication Failed")
 }
 next()
 }
@@ -30,9 +30,7 @@ const auth2= async function(req,res,next){
 
     try{
         let token= req.headers["x-api-key"]
-
-        console.log(token)
-
+//console.log(token)
         if(!token){
          return res.status(400).send({status:false,msg:"token must be present"})
         }
@@ -42,7 +40,7 @@ const auth2= async function(req,res,next){
         if(!verifyToken){
          return res.status(400).send({status:false,msg:"token is invalid"})
         }
-
+        
         const{ authorId } = req.body
 
          let  loggedinAuthor= verifyToken.authorId.toString()
@@ -50,7 +48,7 @@ const auth2= async function(req,res,next){
          if(authorId !== loggedinAuthor){
             return res.status(403).send({status:false,msg:"author is not allowed for this request"})
            }
-           console.log("Authorise successfull")
+          // console.log("Authorise successfull")
         }
 
   catch(error){

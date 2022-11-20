@@ -18,7 +18,7 @@ const createBlog= async function(req,res){
     let {title,body,authorId}=data //Destructuring
 
     if(!title||!body||!authorId){  
-       return res.status(400).send({status:false,msg:"this field  must be present"}) //Checking attributes
+       return res.status(400).send({status:false,msg:"these field  must be present"}) //Checking attributes
     }
     if(!isValidObjectId(authorId)){
        return res.status(400).send({status:false,msg:"authorId is invalid"}) //Checking authorId
@@ -43,29 +43,6 @@ const createBlog= async function(req,res){
 
 }
 
-module.exports.createBlog=createBlog 
-
-
-/*---------------------------------GETTING-BLOG-WITH-AUTHOR------------------------------------------------*/
-
-const getblogwithauthor = async function(req,res){
-    let authorId = req.query.authorId
-    try{
-       let blogs = await BlogModel.find({authorId:{$eq:authorId}}).populate("authorId")
-       console.log(blogs)
-       if(blogs.length==0){
-        return res.status(404).send({message:"Blog Not Found"})
-       }
-       res.status(200).send({msg:blogs})
-    }
-    catch(error){
-          res.status(500).send({status:true,message:error.message})
-    }
-    
-}
-
-module.exports.getblogwithauthor = getblogwithauthor
-
 
 /*---------------------------------GET-FILTERED-BLOGS------------------------------------------------*/
 
@@ -80,19 +57,14 @@ const getblog = async function(req,res){
 
         if(!data1.authorId){
             return res.status(400).send({status:false,msg:"AutherId is required"})
-        }
-       
-             
+        }      
 /* ---------------Authorisation--------------------- */
 
         if(req.verifyToken.authorId !== authorId){
-            console.log("Authorisation Failed")
+           // console.log("Authorisation Failed")
                 return  res.status(401).send({status:false,msg:"not Authorized"})
            }
-
-/* -------------------------------------------- */
-
-
+//----------------------------------------------------------------------------------------------------------//
      let filterblog= await BlogModel.find(data1).populate("authorId")
              console.log(filterblog.length)
                        if(filterblog.length>0){
@@ -103,18 +75,14 @@ const getblog = async function(req,res){
                         }
                         else {
                              res.status(200).send({status:false,data:filterblog})
-                        } 
-              
+                        }         
         
-    }
-
+                      }
     catch(error){
          return  res.status(500).send({message:error.message})
         }
     
 }
-
-module.exports.getblog = getblog
 
 
 /*---------------------------------UPDATE-BLOG------------------------------------------------*/
@@ -146,12 +114,10 @@ const updatedBlog= async function (req,res){
 /* ---------------Authorisation--------------------- */
 
    if(req.verifyToken.authorId !== authorId){
-    console.log("Authorisation Failed")
+   // console.log("Authorisation Failed")
         return  res.status(401).send({status:false,msg:"not Authorized"})
    }
-
-/* -------------------------------------------- */
-
+//-----------------------------------------------------------------------------------//
       let updatedBlog=await BlogModel.findOneAndUpdate(
         {_id:blogId},
         {
@@ -173,9 +139,7 @@ const updatedBlog= async function (req,res){
     } 
  }
 
- module.exports.updatedBlog = updatedBlog
-
-
+ 
 /*-------------------------------------DELETE-BLOG--------------------------------------------*/
   
   
@@ -204,12 +168,10 @@ const deleteBlog=async function(req,res){
 /* --------------Authorisation--------------------- */
 
    if(req.verifyToken.authorId !== authorId){
-    console.log("Authorisation Failed")
+    //console.log("Authorisation Failed")
      return res.status(401).send({status:false,msg:"not authorised"})
    }
-
-/* -------------------------------------------- */
-
+//------------------------------------------------------------------------------//
    let markDeleted= await BlogModel.findOneAndUpdate(
     {_id:blogId},
     {$set:{isDeleted:true,deletedAt:moment().format()}},
@@ -223,10 +185,7 @@ const deleteBlog=async function(req,res){
       }
 }
 
-module.exports.deleteBlog=deleteBlog
-
 /* ------------------------------------DELETE-BLOG-BY-QUERY------------------------------------------------ */
-
 
 const deleteDocument=async function(req,res){
 
@@ -242,15 +201,13 @@ const deleteDocument=async function(req,res){
         return res.status(400).send({status:false,msg:"AutherId is required"})
         }
 
-/* --------------Authorisation--------------------- */
+                    //Authorisation//
 
   if(req.verifyToken.authorId !== authorId){
-    console.log("Authorisation Failed")
+    //console.log("Authorisation Failed")
      return res.status(401).send({status:false,msg:"not authorised"})
    }
-
-/* -------------------------------------------- */
-   
+ //-------------------------------------------------------------------------------//  
    let deleteDoc= await BlogModel.find({isDeleted:false},data).updateMany({$set:{isDeleted:true,deletedAt:moment().format()}})
 
    if(deleteDoc.length == 0){
@@ -264,4 +221,42 @@ const deleteDocument=async function(req,res){
 
 }
 
+//-------------------------------------------------------------------------------------------------//
+
+module.exports.createBlog=createBlog 
+
+module.exports.getblog = getblog
+
+module.exports.updatedBlog = updatedBlog
+
+module.exports.deleteBlog=deleteBlog
+
 module.exports.deleteDocument = deleteDocument
+
+//-----------------------------------------------------------------------------------------------------------//
+
+
+
+
+
+
+
+/*---------------------------------GETTING-BLOG-WITH-AUTHOR------------------------------------------------*/
+
+// const getblogwithauthor = async function(req,res){
+//   let authorId = req.query.authorId
+//   try{
+//      let blogs = await BlogModel.find({authorId:{$eq:authorId}}).populate("authorId")
+//      console.log(blogs)
+//      if(blogs.length==0){
+//       return res.status(404).send({message:"Blog Not Found"})
+//      }
+//      res.status(200).send({msg:blogs})
+//   }
+//   catch(error){
+//         res.status(500).send({status:true,message:error.message})
+//   }
+  
+// }
+
+// module.exports.getblogwithauthor = getblogwithauthor

@@ -17,7 +17,7 @@ const createAuthor= async function(req,res){ // Checking body is empty or not
     let {fname,lname,title,email,password} = data //Destructuring
 
     if(!fname||!lname||!title||!email||!password) {
-        return res.status(400).send({status:false,message:"all fields must be required"})
+        return res.status(400).send({status:false,message:"this field is required"})
     }
 
 /*------------------------Checking attributes are empty or not-----------------------------------*/
@@ -62,8 +62,8 @@ const createAuthor= async function(req,res){ // Checking body is empty or not
     
     /*-----------------------------------CREATING AUTHOR-----------------------------------------------------*/
 
-    let autherCreate = await authors.create(data)
-    res.status(201).send({status:true,data:autherCreate})
+    let createAuthor = await authors.create(data)
+    res.status(201).send({status:true,data:createAuthor})
     }
     catch(error){
           res.status(500).send({status:true,message:error.message})
@@ -90,7 +90,7 @@ const loginAuthor = async function (req, res) {
   
     let author = await authors.findOne( { email: emailId, password: password } );
     if (!author)
-      return res.send( { status: false, msg: "username or the password is not corerct" } );
+      return res.send( { status: false, msg: "email or the password is not corerct" } );
   
     let token = jwt.sign(
       {
