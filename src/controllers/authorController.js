@@ -34,10 +34,12 @@ const createAuthor = async function (req, res) {
 const fetchAuthorProfile = async function (req, res) {
 
 //3. Start using the redis commad
-  let cahcedProfileData = await GET_ASYNC(`${req.params.authorId}`)
+  let cahcedProfileData =  await GET_ASYNC(`${req.params.authorId}`)
+  //CACHE HIT
   if(cahcedProfileData) {
     res.send(cahcedProfileData)
   } else {
+    //CACHE MISS
     let profile = await authorModel.findById(req.params.authorId);
     await SET_ASYNC(`${req.params.authorId}`, JSON.stringify(profile))
     res.send({ data: profile });
